@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Silver Style.com</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a; /* Dark background */
+            color: #e0e0e0; /* Light text for contrast */
+        }
+        .container {
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem;
+        }
+
+        /* Global Message Animation */
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-down {
+            animation: fadeInDown 0.5s ease-out forwards;
+        }
+
+        /* Main Content Fade-in Animation */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .fade-in-content {
+            animation: fadeIn 1s ease-out forwards;
+            animation-delay: 0.5s; /* Delay after loading screen fades */
+            opacity: 0; /* Start hidden */
+        }
+
+        /* Loading Screen Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000; /* Solid black background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease-out; /* Smooth fade out */
+        }
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none; /* Allow clicks through once hidden */
+        }
+        #loading-text {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #fff;
+            animation: pulse 2s infinite ease-in-out;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Tagline Animation */
+        @keyframes fadeInSlideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-slide-up {
+            animation: fadeInSlideUp 0.8s ease-out forwards;
+            animation-delay: 2.5s; /* After loading screen and main content fade in */
+            opacity: 0; /* Start hidden */
+        }
+
+        /* Header Hover Animation */
+        header {
+            transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        }
+        header:hover {
+            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.4), 0 6px 10px -3px rgba(0, 0, 0, 0.1);
+            background-color: #3a3a3a; /* Slightly lighter on hover */
+        }
+
+
+        /* Modal overlay */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 50;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+        }
+        .modal-content {
+            background-color: #2a2a2a; /* Darker modal background */
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            width: 100%;
+            max-width: 32rem;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Input/Textarea/Select focus styles */
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="url"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #6366f1; /* Indigo-500 */
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5);
+        }
+
+        /* Custom scrollbar for horizontal category list (not used in this version but kept for reference) */
+        .horizontal-scroll-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#1a1a1a] font-sans text-[#e0e0e0]">
+
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <h1 id="loading-text">Silver Style.com</h1>
+    </div>
+
+    <!-- Header -->
+    <header class="bg-[#2a2a2a] shadow-md py-4 px-8 flex justify-between items-center rounded-b-xl relative z-10">
+        <div class="flex flex-col items-start">
+            <h1 class="text-3xl font-extrabold text-indigo-500">
+                Silver Style.com
+            </h1>
+            <p id="tagline" class="text-lg text-gray-400 mt-1 animate-fade-in-slide-up">Enhance Your Fashion</p>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button
+                id="manage-products-button"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
+            >
+                Manage Products
+            </button>
+            <button
+                id="switch-to-customer-button"
+                class="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition duration-200 hidden"
+            >
+                Switch to Customer View
+            </button>
+            <button
+                id="cart-button"
+                class="relative px-4 py-2 bg-gray-700 text-gray-200 rounded-lg font-semibold hover:bg-gray-600 transition duration-200 flex items-center space-x-2"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                <span>Cart</span>
+                <span id="cart-item-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">
+                    0
+                </span>
+            </button>
+        </div>
+    </header>
+
+    <!-- User ID Display -->
+    <div id="user-id-display" class="p-4 bg-gray-800 text-gray-300 text-sm text-center rounded-b-xl shadow-inner relative z-10">
+        Your User ID: <span class="font-mono text-gray-100" id="current-user-id">Loading...</span>
+        <span id="admin-status" class="ml-4 font-bold text-green-400 hidden">(Admin Mode)</span>
+    </div>
+
+    <!-- Global Message Display -->
+    <div id="global-message-container" class="fixed top-20 left-1/2 -translate-x-1/2 px-6 py-3 rounded-lg shadow-xl z-50 animate-fade-in-down hidden">
+        <p id="global-message-text" class="text-white"></p>
+    </div>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="container mx-auto p-4 fade-in-content">
+        <!-- Content will be rendered here by JavaScript -->
+    </main>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cart-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="cart-close-button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-2xl">
+                &times;
+            </button>
+            <h2 class="text-3xl font-bold text-gray-100 mb-6 border-b border-gray-700 pb-3">Your Shopping Cart</h2>
+            <div id="cart-items-list" class="space-y-4 mb-6">
+                <!-- Cart items will be rendered here -->
+            </div>
+            <div id="cart-summary" class="hidden">
+                <div class="flex justify-between items-center text-2xl font-bold text-gray-100 border-t border-gray-700 pt-4 mt-6">
+                    <span>Total:</span>
+                    <span id="cart-total">₹0.00</span>
+                </div>
+                <button
+                    id="checkout-button"
+                    class="mt-8 w-full py-4 bg-green-600 text-white rounded-lg font-semibold text-xl hover:bg-green-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                >
+                    Proceed to Checkout
+                </button>
+            </div>
+            <p id="cart-empty-message" class="text-gray-400 text-lg hidden">Your cart is empty.</p>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="checkout-close-button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-2xl">
+                &times;
+            </button>
+            <h2 class="text-3xl font-bold text-gray-100 mb-6 border-b border-gray-700 pb-3">Checkout</h2>
+            <form id="checkout-form">
+                <div class="mb-4">
+                    <label for="customerEmail" class="block text-gray-300 text-sm font-bold mb-2">
+                        Your Email:
+                    </label>
+                    <input
+                        type="email"
+                        id="customerEmail"
+                        class="shadow appearance-none border border-gray-600 rounded-lg w-full py-3 px-4 text-gray-100 bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        placeholder="your.email@example.com"
+                        required
+                    />
+                </div>
+                <div class="mb-6">
+                    <label for="customerAddress" class="block text-gray-300 text-sm font-bold mb-2">
+                        Your Address:
+                    </label>
+                    <textarea
+                        id="customerAddress"
+                        class="shadow appearance-none border border-gray-600 rounded-lg w-full py-3 px-4 text-gray-100 bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none h-24"
+                        placeholder="Enter your full address here..."
+                        required
+                    ></textarea>
+                </div>
+
+                <p class="text-gray-400 text-sm mb-6 text-center">Further details on WhatsApp</p>
+
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-gray-200 mb-3">Order Summary:</h3>
+                    <ul id="checkout-order-summary" class="space-y-2 text-gray-300">
+                        <!-- Order items will be rendered here -->
+                    </ul>
+                    <div class="flex justify-between items-center text-2xl font-bold text-gray-100 border-t border-gray-700 pt-4 mt-4">
+                        <span>Total:</span>
+                        <span id="checkout-total">₹0.00</span>
+                    </div>
+                </div>
+
+                <p id="checkout-message" class="mb-4 text-center font-semibold hidden"></p>
+
+                <button
+                    type="button"
+                    id="order-on-whatsapp-button"
+                    class="w-full py-4 bg-green-600 text-white rounded-lg font-semibold text-xl hover:bg-green-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                >
+                    Order on WhatsApp
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Password Prompt Modal -->
+    <div id="admin-password-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="admin-password-close-button" class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-2xl">
+                &times;
+            </button>
+            <h2 class="text-3xl font-bold text-gray-100 mb-6 text-center">Admin Access</h2>
+            <form id="admin-password-form" class="space-y-6">
+                <div>
+                    <label for="admin-access-password" class="block text-gray-300 text-sm font-bold mb-2">Admin Password:</label>
+                    <input
+                        type="password"
+                        id="admin-access-password"
+                        class="shadow appearance-none border border-gray-600 rounded-lg w-full py-3 px-4 text-gray-100 bg-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        required
+                    />
+                </div>
+                <p id="admin-password-message" class="text-red-500 text-center hidden"></p>
+                <button
+                    type="submit"
+                    id="admin-password-submit-button"
+                    class="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+                >
+                    Enter Admin Panel
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Define the Firebase config and app ID using global variables
+        const defaultFirebaseConfig = {
+            apiKey: "AIzaSyDD5CvYXDi2Bh3ZPAC_G9c3OseUS1n3ByU", // Your actual Firebase API Key
+            authDomain: "gen-lang-client-0743568626.firebaseapp.com", // Your actual Firebase Auth Domain
+            projectId: "gen-lang-client-0743568626", // Your actual Firebase Project ID
+            storageBucket: "gen-lang-client-0743568626.firebasestorage.app", // Your actual Firebase Storage Bucket
+            messagingSenderId: "921556112106", // Your actual Firebase Messaging Sender ID
+            appId: "1:921556112106:web:86a7b72f019e6de67cbd93" // Your actual Firebase App ID
+        };
+
+        let firebaseConfig = {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        try {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                firebaseConfig = JSON.parse(__firebase_config);
+            } else {
+                console.warn("No __firebase_config found in environment. Using defaultFirebaseConfig.");
+                firebaseConfig = defaultFirebaseConfig;
+            }
+        } catch (e) {
+            console.error("Error parsing __firebase_config:", e);
+            console.warn("Falling back to defaultFirebaseConfig due to parsing error.");
+            firebaseConfig = defaultFirebaseConfig;
+        }
+
+        // Ensure firebaseConfig has all necessary properties, falling back to defaults if missing
+        firebaseConfig = { ...defaultFirebaseConfig, ...firebaseConfig };
+
+        if (firebaseConfig.projectId === "YOUR_PROJECT_ID") { // Check against the placeholder
+            console.error("Firebase projectId is still a placeholder. Please update the firebaseConfig in the code.");
+        }
+
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // --- Global State Management ---
+        let appState = {
+            currentUser: null,
+            userId: null,
+            products: [],
+            cart: [],
+            currentView: 'shop', // 'shop', 'manage', 'addProduct', 'editProduct'
+            currentProduct: null, // For editing in admin view
+            showCartModal: false,
+            showCheckoutModal: false,
+            showAdminPasswordModal: false,
+            message: '',
+            loadingAuth: true,
+            loadingProducts: true,
+            isAdminMode: false // New state to track if we are in admin mode
+        };
+
+        // HARDCODED ADMIN PASSWORD
+        const ADMIN_PASSWORD = 'SUSHMA';
+
+        // --- Utility Functions ---
+        function updateUI() {
+            // Update User ID display
+            const userIdDisplay = document.getElementById('current-user-id');
+            if (userIdDisplay) userIdDisplay.textContent = appState.userId || 'Guest';
+
+            // Update Admin Status display
+            const adminStatusElem = document.getElementById('admin-status');
+            if (adminStatusElem) {
+                if (appState.isAdminMode) {
+                    adminStatusElem.classList.remove('hidden');
+                } else {
+                    adminStatusElem.classList.add('hidden');
+                }
+            }
+
+
+            // Toggle visibility of "Manage Products" and "Switch to Customer View" buttons
+            const manageProductsBtn = document.getElementById('manage-products-button');
+            const switchToCustomerBtn = document.getElementById('switch-to-customer-button');
+            if (manageProductsBtn && switchToCustomerBtn) {
+                if (appState.isAdminMode) {
+                    manageProductsBtn.classList.add('hidden');
+                    switchToCustomerBtn.classList.remove('hidden');
+                } else {
+                    manageProductsBtn.classList.remove('hidden');
+                    switchToCustomerBtn.classList.add('hidden');
+                }
+            }
+
+
+            // Update global message
+            const messageContainer = document.getElementById('global-message-container');
+            const messageText = document.getElementById('global-message-text');
+            if (messageContainer && messageText) {
+                if (appState.message) {
+                    messageText.textContent = appState.message;
+                    messageContainer.classList.remove('hidden');
+                    if (appState.message.includes('success') || appState.message.includes('Thank you') || appState.message.includes('Logged in')) {
+                        messageContainer.classList.remove('bg-red-500');
+                        messageContainer.classList.add('bg-indigo-500');
+                    } else {
+                        messageContainer.classList.remove('bg-indigo-500');
+                        messageContainer.classList.add('bg-red-500');
+                    }
+                    setTimeout(() => {
+                        messageContainer.classList.add('hidden');
+                        appState.message = ''; // Clear message in state too
+                    }, 3000);
+                } else {
+                    messageContainer.classList.add('hidden');
+                }
+            }
+
+            // Render Main Content based on currentView
+            const mainContent = document.getElementById('main-content');
+            if (mainContent) {
+                mainContent.innerHTML = ''; // Clear existing content
+
+                if (appState.loadingAuth || appState.loadingProducts) {
+                    mainContent.innerHTML = '<p class="text-center text-gray-400 text-lg col-span-full">Loading application...</p>';
+                } else if (appState.currentView === 'shop') {
+                    renderShopView(mainContent);
+                } else if (appState.currentView === 'manage') {
+                    renderAdminPanel(mainContent);
+                } else if (appState.currentView === 'addProduct') {
+                    renderProductForm(mainContent, null);
+                } else if (appState.currentView === 'editProduct' && appState.currentProduct) {
+                    renderProductForm(mainContent, appState.currentProduct);
+                }
+            }
+
+
+            // Render Modals (always call these, they handle their own visibility)
+            renderCartModal();
+            renderCheckoutModal();
+            renderAdminPasswordModal();
+
+            // Update cart item count in header
+            const cartItemCount = document.getElementById('cart-item-count');
+            const totalItemsInCart = appState.cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (cartItemCount) {
+                if (totalItemsInCart > 0) {
+                    cartItemCount.textContent = totalItemsInCart;
+                    cartItemCount.classList.remove('hidden');
+                } else {
+                    cartItemCount.classList.add('hidden');
+                }
+            }
+        }
+
+        function setMessage(msg) {
+            appState.message = msg;
+            updateUI();
+        }
+
+        // --- Customer Shop View ---
+        function renderShopView(parentEl) {
+            const shopHtml = `
+                <h2 class="text-4xl font-extrabold text-gray-100 mb-10 text-center">Our Latest Collection</h2>
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    ${appState.products.length === 0 ? '<p class="text-center text-gray-400 text-lg col-span-full">No products available yet. Check back soon!</p>' : ''}
+                </div>
+            `;
+            parentEl.innerHTML = shopHtml;
+
+            const productsGrid = document.getElementById('products-grid');
+            if (productsGrid) {
+                appState.products.forEach(product => {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = createProductCardHtml(product);
+                    const productCardElement = tempDiv.firstElementChild;
+
+                    productsGrid.appendChild(productCardElement);
+
+                    const addToCartBtn = productCardElement.querySelector('.add-to-cart-btn');
+                    if (addToCartBtn) {
+                        addToCartBtn.addEventListener('click', () => {
+                            handleAddToCart(product);
+                        });
+                    }
+                });
+            }
+        }
+
+        // --- Product Card HTML Generation (for both views) ---
+        function createProductCardHtml(product) {
+            return `
+                <div class="bg-gray-800 rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 flex flex-col">
+                    <img
+                        src="${product.imageUrl || `https://placehold.co/400x300/374151/D1D5DB?text=No+Image`}"
+                        alt="${product.name}"
+                        class="w-full h-48 object-cover"
+                        onerror="this.onerror=null;this.src='https://placehold.co/400x300/374151/D1D5DB?text=No+Image';"
+                    />
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-100 mb-2">${product.name}</h3>
+                            <p class="text-gray-400 text-sm mb-3 line-clamp-3">${product.description}</p>
+                            <p class="text-2xl font-bold text-indigo-400 mb-4">₹${product.price.toFixed(2)}</p>
+                            <p class="text-sm text-gray-500">Stock: ${product.stock}</p>
+                        </div>
+                        ${appState.currentView === 'shop' ? `
+                            <button
+                                data-product-id="${product.id}"
+                                class="add-to-cart-btn mt-4 w-full py-3 rounded-lg text-white font-semibold transition duration-200
+                                ${product.stock > 0 ? 'bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50' : 'bg-gray-600 cursor-not-allowed'}"
+                                ${product.stock <= 0 ? 'disabled' : ''}
+                            >
+                                ${product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+                            </button>
+                        ` : `
+                            <div class="flex justify-end gap-3 mt-4">
+                                <button
+                                    data-product-id="${product.id}"
+                                    class="edit-product-btn px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-200"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    data-product-id="${product.id}"
+                                    class="delete-product-btn px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition duration-200"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Admin Panel Component ---
+        function renderAdminPanel(parentEl) {
+            const panelHtml = `
+                <div class="p-8 bg-gray-800 rounded-xl shadow-lg">
+                    <h2 class="text-4xl font-extrabold text-gray-100 mb-8 text-center">Product Management</h2>
+                    <div class="flex justify-end mb-6">
+                        <button
+                            id="add-new-product-btn"
+                            class="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition duration-200 flex items-center space-x-2"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                            <span>Add New Product</span>
+                        </button>
+                    </div>
+
+                    <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        ${appState.products.length === 0 && !appState.loadingProducts ? '<p class="text-center text-gray-400 text-lg col-span-full">No products added yet. Click "Add New Product" to get started.</p>' : ''}
+                        ${appState.loadingProducts ? '<p class="text-center text-gray-400 text-lg col-span-full">Loading products...</p>' : ''}
+                    </div>
+                </div>
+            `;
+            parentEl.innerHTML = panelHtml;
+
+            const addNewProductBtn = document.getElementById('add-new-product-btn');
+            if (addNewProductBtn) {
+                addNewProductBtn.addEventListener('click', () => {
+                    appState.currentView = 'addProduct';
+                    appState.currentProduct = null;
+                    updateUI();
+                });
+            }
+
+
+            const productsGrid = document.getElementById('products-grid');
+            if (productsGrid && !appState.loadingProducts) {
+                appState.products.forEach(product => {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = createProductCardHtml(product);
+                    const productCardElement = tempDiv.firstElementChild;
+
+                    productsGrid.appendChild(productCardElement);
+
+                    const editButton = productCardElement.querySelector('.edit-product-btn');
+                    if (editButton) {
+                        editButton.addEventListener('click', (e) => {
+                            const productId = e.target.dataset.productId;
+                            const productToEdit = appState.products.find(p => p.id === productId);
+                            if (productToEdit) {
+                                appState.currentProduct = productToEdit;
+                                appState.currentView = 'editProduct';
+                                updateUI();
+                            }
+                        });
+                    }
+
+                    const deleteButton = productCardElement.querySelector('.delete-product-btn');
+                    if (deleteButton) {
+                        deleteButton.addEventListener('click', (e) => {
+                            const productId = e.target.dataset.productId;
+                            handleDeleteProduct(productId);
+                        });
+                    }
+                });
+            }
+        }
+
+        // --- Product Form Component (Admin View) ---
+        function renderProductForm(parentEl, product = null) {
+            const formHtml = `
+                <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-2xl mx-auto">
+                    <h2 class="text-3xl font-bold text-gray-100 mb-6 border-b border-gray-700 pb-3">
+                        ${product ? 'Edit Product' : 'Add New Product'}
+                    </h2>
+                    <form id="product-form" class="space-y-5">
+                        <div>
+                            <label for="product-name" class="block text-gray-300 text-sm font-bold mb-2">Product Name:</label>
+                            <input
+                                type="text"
+                                id="product-name"
+                                class="shadow appearance-none border border-gray-600 rounded-lg w-full py-3 px-4 text-gray-100 bg-gray-700 leading-tight"
+                                value="${product?.name || ''}"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label for="product-description" class="block text-gray-300 text-sm font-bold mb-2">Description:</label>
+                            <textarea
+                                id="product-description"
+                                class="shadow appearance-none border border-gray-600 rounded-lg w-full py-3 px-4 text-gray-100 bg-gray-700 leading-tight h-24 resize-none"
+                                required
+                            >${product?.description || ''}</textarea>
+                        </div>
+                        <div>
+                            <label for="product-price" class="block text-gray-300 text-sm font-bold mb-2">Price (₹):</label>
+                            <input
+                                type="number"
+                                id="product-price"
+                                class="shadow appearance-none border border-gray-600 rounded-lg w-full py-3 px-4 text-gray-100 bg-gray-700 leading-tight"
+                                value="${product?.price || ''}"
+                                step="0.01"
+                                min="0"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label for="product-image-url" class="block text-gray-300 text-sm font-bold mb-2">Product Image URL:</label>
+                            <input
+                                type="url"
+                                id="product-image-url"
+                                class="shadow appearance-none border border-gray-600 rounded-lg w-full py-3 px-4 text-gray-100 bg-gray-700 leading-tight"
+                                value="${product?.imageUrl || ''}"
+                                placeholder="e.g., https://example.com/your-image.jpg"
+                                required
+                            />
+                            ${product?.imageUrl ? `<img src="${product.imageUrl}" alt="Current Image" class="mt-2 h-24 w-24 object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/400x300/374151/D1D5DB?text=No+Image';">` : ''}
+                            <p class="text-sm text-gray-500 mt-1">
+                                Please provide a direct URL to your image (e.g., from Imgur.com or Google Photos).
+                            </p>
+                        </div>
+                        <div>
+                            <label for="product-stock" class="block text-gray-300 text-sm font-bold mb-2">Stock:</label>
+                            <input
+                                type="number"
+                                id="product-stock"
+                                class="shadow appearance-none border border-gray-600 rounded-lg w-full py-3 px-4 text-gray-100 bg-gray-700 leading-tight"
+                                value="${product?.stock || 0}"
+                                min="0"
+                                required
+                            />
+                        </div>
+                        <div class="flex justify-end gap-4 mt-6">
+                            <button
+                                type="button"
+                                id="cancel-product-btn"
+                                class="px-6 py-3 bg-gray-600 text-gray-200 rounded-lg font-semibold hover:bg-gray-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                id="save-product-btn"
+                                class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+                            >
+                                ${product ? 'Update Product' : 'Add Product'}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            parentEl.innerHTML = formHtml;
+
+            const cancelButton = document.getElementById('cancel-product-btn');
+            if (cancelButton) {
+                cancelButton.addEventListener('click', () => {
+                    appState.currentView = 'manage'; // Go back to manage
+                    appState.currentProduct = null;
+                    updateUI();
+                });
+            }
+
+            const productForm = document.getElementById('product-form');
+            if (productForm) {
+                productForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('product-name').value;
+                    const description = document.getElementById('product-description').value;
+                    const price = parseFloat(document.getElementById('product-price').value);
+                    const imageUrl = document.getElementById('product-image-url').value;
+                    const stock = parseInt(document.getElementById('product-stock').value, 10);
+
+                    if (!name || !description || isNaN(price) || !imageUrl || isNaN(stock) || stock < 0) {
+                        setMessage('Please fill all required fields correctly (including a valid image URL).');
+                        return;
+                    }
+
+                    const productData = {
+                        name,
+                        description,
+                        price,
+                        imageUrl: imageUrl,
+                        stock,
+                        createdAt: product?.createdAt || new Date(),
+                        updatedAt: new Date(),
+                    };
+                    handleSaveProduct(product?.id, productData);
+                });
+            }
+        }
+
+        // --- Cart Modal Rendering ---
+        function renderCartModal() {
+            const cartModal = document.getElementById('cart-modal');
+            const cartItemsList = document.getElementById('cart-items-list');
+            const cartSummary = document.getElementById('cart-summary');
+            const cartTotalSpan = document.getElementById('cart-total');
+            const cartEmptyMessage = document.getElementById('cart-empty-message');
+            const cartCloseButton = document.getElementById('cart-close-button');
+            const checkoutButton = document.getElementById('checkout-button');
+
+            if (!cartModal || !cartItemsList || !cartSummary || !cartTotalSpan || !cartEmptyMessage || !cartCloseButton || !checkoutButton) {
+                console.error("Cart modal elements not found.");
+                return;
+            }
+
+            if (appState.showCartModal) {
+                cartModal.classList.add('visible'); // Add visible class for transition
+                cartModal.classList.remove('hidden');
+                cartItemsList.innerHTML = ''; // Clear previous items
+
+                if (appState.cart.length === 0) {
+                    cartEmptyMessage.classList.remove('hidden');
+                    cartSummary.classList.add('hidden');
+                } else {
+                    cartEmptyMessage.classList.add('hidden');
+                    cartSummary.classList.remove('hidden');
+
+                    let total = 0;
+                    appState.cart.forEach(item => {
+                        total += item.price * item.quantity;
+                        const listItem = document.createElement('li');
+                        listItem.className = 'flex justify-between items-center bg-gray-700 p-3 rounded-lg shadow-sm text-gray-200';
+                        listItem.innerHTML = `
+                            <div>
+                                <p class="font-semibold text-lg text-gray-100">${item.name}</p>
+                                <p class="text-sm text-gray-400">₹${item.price.toFixed(2)} x ${item.quantity}</p>
+                            </div>
+                            <button
+                                data-product-id="${item.id}"
+                                class="remove-from-cart-btn text-red-500 hover:text-red-400 text-lg"
+                            >
+                                Remove
+                            </button>
+                        `;
+                        cartItemsList.appendChild(listItem);
+
+                        // Attach remove event listener
+                        const removeButton = listItem.querySelector('.remove-from-cart-btn');
+                        if (removeButton) {
+                            removeButton.addEventListener('click', (e) => {
+                                const productId = e.target.dataset.productId;
+                                handleRemoveFromCart(productId);
+                            });
+                        }
+                    });
+                    cartTotalSpan.textContent = `₹${total.toFixed(2)}`;
+                }
+            } else {
+                cartModal.classList.remove('visible'); // Remove visible class for transition
+                // Hide after transition
+                setTimeout(() => {
+                    cartModal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // --- Checkout Modal Rendering ---
+        function renderCheckoutModal() {
+            const checkoutModal = document.getElementById('checkout-modal');
+            const checkoutOrderSummary = document.getElementById('checkout-order-summary');
+            const checkoutTotalSpan = document.getElementById('checkout-total');
+            const checkoutMessage = document.getElementById('checkout-message');
+            const orderOnWhatsAppButton = document.getElementById('order-on-whatsapp-button');
+            const customerAddressInput = document.getElementById('customerAddress');
+            const customerEmailInput = document.getElementById('customerEmail');
+
+            if (!checkoutModal || !checkoutOrderSummary || !checkoutTotalSpan || !checkoutMessage || !orderOnWhatsAppButton || !customerAddressInput || !customerEmailInput) {
+                console.error("Checkout modal elements not found.");
+                return;
+            }
+
+            if (appState.showCheckoutModal) {
+                checkoutModal.classList.add('visible'); // Add visible class for transition
+                checkoutModal.classList.remove('hidden');
+                checkoutOrderSummary.innerHTML = ''; // Clear previous items
+                checkoutMessage.classList.add('hidden'); // Hide previous messages
+
+                let total = 0;
+                appState.cart.forEach(item => {
+                    total += item.price * item.quantity;
+                    const listItem = document.createElement('li');
+                    listItem.className = 'flex justify-between text-gray-300';
+                    listItem.innerHTML = `
+                        <span>${item.name} x ${item.quantity}</span>
+                        <span>₹${(item.price * item.quantity).toFixed(2)}</span>
+                    `;
+                    checkoutOrderSummary.appendChild(listItem);
+                });
+                checkoutTotalSpan.textContent = `₹${total.toFixed(2)}`;
+
+                orderOnWhatsAppButton.disabled = false;
+                orderOnWhatsAppButton.textContent = 'Order on WhatsApp';
+
+                // Reset fields when opening
+                customerAddressInput.value = '';
+                customerEmailInput.value = '';
+            } else {
+                checkoutModal.classList.remove('visible'); // Remove visible class for transition
+                // Hide after transition
+                setTimeout(() => {
+                    checkoutModal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // --- Admin Password Modal Rendering ---
+        function renderAdminPasswordModal() {
+            const adminPasswordModal = document.getElementById('admin-password-modal');
+            const adminPasswordMessage = document.getElementById('admin-password-message');
+            const adminAccessPasswordInput = document.getElementById('admin-access-password');
+
+            if (!adminPasswordModal || !adminPasswordMessage || !adminAccessPasswordInput) {
+                console.error("Admin password modal elements not found.");
+                return;
+            }
+
+            if (appState.showAdminPasswordModal) {
+                adminPasswordModal.classList.add('visible'); // Add visible class for transition
+                adminPasswordModal.classList.remove('hidden');
+                adminPasswordMessage.classList.add('hidden'); // Clear previous messages
+                adminAccessPasswordInput.value = ''; // Clear password field
+            } else {
+                adminPasswordModal.classList.remove('visible'); // Remove visible class for transition
+                // Hide after transition
+                setTimeout(() => {
+                    adminPasswordModal.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+
+        // --- Cart Functions ---
+        function handleAddToCart(product) {
+            const existingItem = appState.cart.find((item) => item.id === product.id);
+            if (existingItem) {
+                appState.cart = appState.cart.map((item) =>
+                    item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                );
+            } else {
+                appState.cart = [...appState.cart, { ...product, quantity: 1 }];
+            }
+            setMessage(`${product.name} added to cart!`);
+            appState.showCartModal = true; // Open cart modal when item is added
+            updateUI();
+        }
+
+        function handleRemoveFromCart(productId) {
+            const existingItem = appState.cart.find((item) => item.id === productId);
+            if (existingItem && existingItem.quantity > 1) {
+                appState.cart = appState.cart.map((item) =>
+                    item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
+                );
+            } else {
+                appState.cart = appState.cart.filter((item) => item.id !== productId);
+            }
+            setMessage('Item removed from cart.');
+            updateUI();
+        }
+
+        function handleCheckout() {
+            appState.showCartModal = false;
+            appState.showCheckoutModal = true;
+            updateUI();
+        }
+
+        async function sendOrderViaWhatsApp() {
+            const whatsappNumber = '918789380992'; // The target WhatsApp number
+            const customerAddressInput = document.getElementById('customerAddress');
+            const customerEmailInput = document.getElementById('customerEmail');
+            const checkoutMessage = document.getElementById('checkout-message');
+
+            const customerAddress = customerAddressInput ? customerAddressInput.value.trim() : '';
+            const customerEmail = customerEmailInput ? customerEmailInput.value.trim() : '';
+
+            if (!customerEmail || !customerAddress) {
+                if (checkoutMessage) {
+                    checkoutMessage.textContent = 'Please fill in your email and address to proceed.';
+                    checkoutMessage.classList.remove('hidden');
+                    checkoutMessage.classList.remove('text-green-600');
+                    checkoutMessage.classList.add('text-red-500');
+                }
+                return;
+            }
+
+            let orderMessage = `Hello! I'd like to place an order from Silver Style.com.\n\n`;
+            orderMessage += `Customer Email: ${customerEmail}\n`;
+            orderMessage += `Customer Address: ${customerAddress}\n\n`;
+            orderMessage += `Order Details:\n`;
+
+            let total = 0;
+
+            if (appState.cart.length === 0) {
+                setMessage("Your cart is empty. Please add items before ordering.", 'error');
+                return;
+            }
+
+            appState.cart.forEach((item, index) => {
+                orderMessage += `${index + 1}. ${item.name} (Qty: ${item.quantity}) - ₹${(item.price * item.quantity).toFixed(2)}\n`;
+                total += item.price * item.quantity;
+            });
+
+            orderMessage += `\nTotal Amount: ₹${total.toFixed(2)}\n`;
+            orderMessage += `My User ID: ${appState.userId}\n`;
+            orderMessage += `\nFurther details will be discussed on WhatsApp.`;
+
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderMessage)}`;
+
+            try {
+                window.open(whatsappUrl, '_blank');
+                setMessage('Redirecting to WhatsApp with your order!');
+                appState.cart = [];
+                appState.showCheckoutModal = false;
+                updateUI();
+            } catch (error) {
+                console.error("Error opening WhatsApp:", error);
+                setMessage("Failed to open WhatsApp. Please ensure it's installed or try again.", 'error');
+            }
+        }
+
+
+        // --- Product Data Management Functions (Admin) ---
+        async function handleSaveProduct(id, productData) {
+            try {
+                if (id) {
+                    const productRef = doc(db, `artifacts/${appId}/public/data/products`, id);
+                    await updateDoc(productRef, productData);
+                    setMessage('Product updated successfully!');
+                } else {
+                    await addDoc(collection(db, `artifacts/${appId}/public/data/products`), productData);
+                    setMessage('Product added successfully!');
+                }
+                appState.currentView = 'manage';
+                appState.currentProduct = null;
+                updateUI();
+            } catch (error) {
+                console.error("Error saving product:", error);
+                setMessage('Failed to save product. Please try again.');
+            }
+        }
+
+        async function handleDeleteProduct(id) {
+            console.log("Confirming delete for product ID:", id);
+            try {
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/products`, id));
+                setMessage('Product deleted successfully!');
+            } catch (error) {
+                console.error("Error deleting product:", error);
+                setMessage('Failed to delete product. Please try again.');
+            }
+        }
+
+        // --- Admin Password Handling ---
+        function handleAdminPasswordSubmit(e) {
+            e.preventDefault();
+            const enteredPassword = document.getElementById('admin-access-password').value;
+            const adminPasswordMessage = document.getElementById('admin-password-message');
+
+            if (enteredPassword === ADMIN_PASSWORD) {
+                appState.isAdminMode = true;
+                appState.currentView = 'manage';
+                appState.showAdminPasswordModal = false;
+                setMessage('Logged in to Admin Mode!');
+                updateUI();
+            } else {
+                if (adminPasswordMessage) {
+                    adminPasswordMessage.textContent = 'Incorrect password.';
+                    adminPasswordMessage.classList.remove('hidden');
+                }
+            }
+        }
+
+        // --- Switch to Customer View ---
+        function handleSwitchToCustomerView() {
+            appState.isAdminMode = false;
+            appState.currentView = 'shop';
+            setMessage('Switched to Customer View.');
+            updateUI();
+        }
+
+        // --- Initial Setup and Event Listeners ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const mainContent = document.getElementById('main-content');
+            const manageProductsBtn = document.getElementById('manage-products-button');
+            const switchToCustomerBtn = document.getElementById('switch-to-customer-button');
+            const cartButton = document.getElementById('cart-button');
+            const cartCloseButton = document.getElementById('cart-close-button');
+            const checkoutCloseButton = document.getElementById('checkout-close-button');
+            const adminPasswordCloseButton = document.getElementById('admin-password-close-button');
+            const checkoutButton = document.getElementById('checkout-button');
+            const orderOnWhatsAppButton = document.getElementById('order-on-whatsapp-button');
+            const adminPasswordForm = document.getElementById('admin-password-form');
+
+
+            // Keep loading screen visible initially
+            if (loadingScreen) loadingScreen.classList.remove('hidden');
+            if (mainContent) mainContent.classList.add('hidden');
+
+            // Declare initialAuthToken within this scope
+            const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+            console.log("DOMContentLoaded: Starting Firebase authentication...");
+            try {
+                if (initialAuthToken) {
+                    console.log("Attempting signInWithCustomToken...");
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    console.log("Attempting signInAnonymously...");
+                    await signInAnonymously(auth);
+                }
+                console.log("Firebase authentication successful.");
+            } catch (error) {
+                console.error("Firebase authentication error:", error);
+                setMessage(`Authentication failed: ${error.message}. Please check Firebase Auth settings.`, 'error');
+                appState.loadingAuth = false;
+                updateUI();
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                appState.currentUser = user;
+                if (user) {
+                    appState.userId = user.uid;
+                    console.log("User authenticated. UID:", user.uid);
+                } else {
+                    appState.userId = null;
+                    console.log("User not authenticated (null user).");
+                }
+                appState.loadingAuth = false;
+                updateUI();
+
+                if (appState.userId && db) {
+                    console.log("Customer View: Fetching products...");
+                    const productsCollectionRef = collection(db, `artifacts/${appId}/public/data/products`);
+                    const q = query(productsCollectionRef, orderBy('createdAt', 'desc'));
+
+                    onSnapshot(q, (snapshot) => {
+                        appState.products = snapshot.docs.map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }));
+                        appState.loadingProducts = false;
+                        console.log(`Customer View: Products fetched successfully. Total: ${appState.products.length}`);
+                        updateUI();
+
+                        // Hide loading screen and show main content after data is loaded and rendered
+                        // Add a minimum display time for the loading animation (e.g., 2 seconds)
+                        setTimeout(() => {
+                            if (loadingScreen) loadingScreen.classList.add('hidden');
+                            if (mainContent) mainContent.classList.remove('hidden');
+                        }, 2000); // Minimum 2 seconds for loading animation
+                    }, (error) => {
+                        console.error("Customer View: Error fetching products:", error);
+                        setMessage("Failed to load products. Please try again.", 'error');
+                        appState.loadingProducts = false;
+                        updateUI();
+                        // Hide loading screen even on error
+                        setTimeout(() => {
+                            if (loadingScreen) loadingScreen.classList.add('hidden');
+                            if (mainContent) mainContent.classList.remove('hidden');
+                        }, 2000);
+                    });
+                } else {
+                    console.log("Customer View: Skipping product fetch: userId or db not ready.");
+                    appState.loadingProducts = false;
+                    updateUI();
+                    // Hide loading screen if product fetch is skipped
+                    setTimeout(() => {
+                        if (loadingScreen) loadingScreen.classList.add('hidden');
+                        if (mainContent) mainContent.classList.remove('hidden');
+                    }, 2000);
+                }
+            });
+
+            // Attach event listeners for main navigation and modals
+            if (manageProductsBtn) {
+                manageProductsBtn.addEventListener('click', () => {
+                    appState.showAdminPasswordModal = true;
+                    updateUI();
+                });
+            }
+            if (switchToCustomerBtn) {
+                switchToCustomerBtn.addEventListener('click', handleSwitchToCustomerView);
+            }
+            if (cartButton) {
+                cartButton.addEventListener('click', () => {
+                    appState.showCartModal = true;
+                    updateUI();
+                });
+            }
+
+            // Modal close buttons
+            if (cartCloseButton) {
+                cartCloseButton.addEventListener('click', () => {
+                    appState.showCartModal = false;
+                    updateUI();
+                });
+            }
+            if (checkoutCloseButton) {
+                checkoutCloseButton.addEventListener('click', () => {
+                    appState.showCheckoutModal = false;
+                    updateUI();
+                });
+            }
+            if (adminPasswordCloseButton) {
+                adminPasswordCloseButton.addEventListener('click', () => {
+                    appState.showAdminPasswordModal = false;
+                    updateUI();
+                });
+            }
+
+            // Form submissions and new WhatsApp button listener
+            if (checkoutButton) {
+                checkoutButton.addEventListener('click', handleCheckout);
+            }
+            if (orderOnWhatsAppButton) {
+                orderOnWhatsAppButton.addEventListener('click', sendOrderViaWhatsApp);
+            }
+            if (adminPasswordForm) {
+                adminPasswordForm.addEventListener('submit', handleAdminPasswordSubmit);
+            }
+
+            updateUI(); // Initial render to set up loading state
+        });
+    </script>
+</body>
+</html>
